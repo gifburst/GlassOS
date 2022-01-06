@@ -39,12 +39,12 @@ void setup() {
   digitalWrite(pwrPin, HIGH);
   digitalWrite(lcdBL, LOW);
   display.begin();
-  display.setRotation(2);     // My screen is flipped upside down! :/
+  display.setRotation(2);
   display.clearDisplay();
   delay(4000);  // You may increase this if the duration isn't enough
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("Sim is \nturned off or \nnot responding"));
+    display.println(F("link is \nturned off or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
@@ -78,7 +78,7 @@ void loop() {
   }
   if (isButtonDown(btnEnt) == true) {
     if (menuPos == 0) {
-      String s = openURL(F("raw.githubusercontent.com/HA4ever37/Sim800l/master/Sim800.txt"), true); // Change the URL to your text file link
+      String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/GlassOS1.txt"), true); // Change the URL to your text file link
       if (s == "ERROR" || s == "")  {
         display.clearDisplay();
         display.println(F("Bad request! \ntry again"));
@@ -340,7 +340,7 @@ void netInfo() {
     isItSleep = false;
   }
   display.clearDisplay();
-  display.println(F("Getting\nnetwork info"));
+  display.println(F("Getting\nlink info"));
   display.display();
   String data[2];
   String network;
