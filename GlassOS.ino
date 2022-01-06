@@ -21,7 +21,7 @@ unsigned long startMillis, currentMillis;
 const unsigned long period PROGMEM = 30000; // The duration in milliseconds before the microcontroller goes to sleep
 bool GPRSCon, isItSleep, exitBool;
 byte menuPos, menuScreen, markerPos, menuStartAt;
-const char* const menu[13] PROGMEM  = {"File Request", "Network Info", "Weather Info", "Location Info", "Save Location",
+const char* const menu[13] PROGMEM  = {"GlassOS", "Link Info", "Weather", "Location", "Save Location",
                                        "Last Saved" , "Upload Loc", "Auto Upload", "Connect", "Disconnect",
                                        "Light Switch", "Power Down", "Reset Sim"
                                       };
@@ -198,7 +198,7 @@ String openURL(String string, bool ssl) {
     connectGPRS();
   display.clearDisplay();
   Serial.print(F("AT+HTTPINIT\r"));
-  display.println(F("HTTP \nIntialization\n"));
+  display.println(F("SquirrelLink \nIntialization\n"));
   display.display();
   if (Serial.readString().indexOf(F("OK")) == -1)
     return "";
@@ -587,7 +587,7 @@ void wakeUp() {
   delay(4000);
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("Sim is \nturned off or \nnot responding"));
+    display.println(F("SquirrelLink\n is \nnot connected or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
