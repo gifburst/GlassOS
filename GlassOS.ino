@@ -23,7 +23,7 @@ bool GPRSCon, isItSleep, exitBool;
 byte menuPos, menuScreen, markerPos, menuStartAt;
 const char* const menu[13] PROGMEM  = {"File Request", "Network Info", "Weather Info", "Location Info", "Save Location",
                                        "Last Saved" , "Upload Loc", "Auto Upload", "Connect", "Disconnect",
-                                       "Light Switch", "Power Down", "Reset Sim800L"
+                                       "Light Switch", "Power Down", "Reset Sim"
                                       };
 byte MENU_LENGTH =  sizeof(menu) / sizeof(menu[0]);
 
@@ -44,7 +44,7 @@ void setup() {
   delay(4000);  // You may increase this if the duration isn't enough
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("Sim800L is \nturned off or \nnot responding"));
+    display.println(F("Sim is \nturned off or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
@@ -418,7 +418,7 @@ void connectGPRS() {
   }
   else {
     display.clearDisplay();
-    display.println(F("Initializing \nSim800L\n"));
+    display.println(F("Initializing \nSquirrelLink \n"));
     display.display();
     Serial.print(F("AT+CSCLK=0\r"));
     while (!Serial.available());
@@ -582,12 +582,12 @@ void wakeUp() {
   digitalWrite(resetPin, HIGH);
   digitalWrite(pwrPin, HIGH);
   display.clearDisplay();
-  display.println(F("Waking up \nSim800L"));
+  display.println(F("Waking up \nSquirrelLink"));
   display.display();
   delay(4000);
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("Sim800L is \nturned off or \nnot responding"));
+    display.println(F("Sim is \nturned off or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
