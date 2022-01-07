@@ -23,7 +23,7 @@ bool GPRSCon, isItSleep, exitBool;
 byte menuPos, menuScreen, markerPos, menuStartAt;
 const char* const menu[13] PROGMEM  = {"GlassOS", "Link Info", "Weather", "Location", "Save Location",
                                        "Last Saved" , "Upload Loc", "Auto Upload", "Connect", "Disconnect",
-                                       "Light Switch", "Power Down", "Reset Sim"
+                                       "Power Down", "Reset Sim"
                                       };
 byte MENU_LENGTH =  sizeof(menu) / sizeof(menu[0]);
 
@@ -170,10 +170,8 @@ void loop() {
       showMenu();
     }
     else if (menuPos == 10)
-      toggle();
-    else if (menuPos == 11)
       pwrDown();
-    else if (menuPos == 12) {
+    else if (menuPos == 10) {
       resetSim800();
       showMenu();
     }
