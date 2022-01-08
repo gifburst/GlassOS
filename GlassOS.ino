@@ -21,7 +21,7 @@ unsigned long startMillis, currentMillis;
 const unsigned long period PROGMEM = 30000; // The duration in milliseconds before the microcontroller goes to sleep
 bool GPRSCon, isItSleep, exitBool;
 byte menuPos, menuScreen, markerPos, menuStartAt;
-const char* const menu[13] PROGMEM  = {"GlassOS", "Link Info", "Weather", "Location", "Save Location",
+const char* const menu[13] PROGMEM  = {"GlassOS", "Net Info", "Weather", "Location", "Save Location",
                                        "Last Saved" , "Upload Loc", "Auto Upload", "Connect", "Disconnect",
                                        "Power Down", "Reset Sim"
                                       };
@@ -44,7 +44,7 @@ void setup() {
   delay(4000);  // You may increase this if the duration isn't enough
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("link is \nturned off or \nnot responding"));
+    display.println(F("Network is \nturned off or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
@@ -78,7 +78,7 @@ void loop() {
   }
   if (isButtonDown(btnEnt) == true) {
     if (menuPos == 0) {
-      String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/GlassOS1.txt"), true); // Change the URL to your text file link
+      String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/GlassOS1.txt"), true);
       if (s == "ERROR" || s == "")  {
         display.clearDisplay();
         display.println(F("Bad request! \ntry again"));
@@ -196,7 +196,7 @@ String openURL(String string, bool ssl) {
     connectGPRS();
   display.clearDisplay();
   Serial.print(F("AT+HTTPINIT\r"));
-  display.println(F("SquirrelLink \nIntialization\n"));
+  display.println(F("Network \nIntialization\n"));
   display.display();
   if (Serial.readString().indexOf(F("OK")) == -1)
     return "";
@@ -289,7 +289,7 @@ String locInfo(byte save) {
       Serial.print(F("AT+HTTPPARA=\"CONTENT\",\"application/json\"\r"));
       Serial.readString();
       // WARNING!!!  YOU MUST CHANGE the secret-key otherwise your location info will be sent to my JSON account!
-      Serial.print(F("AT+HTTPPARA=\"USERDATA\",\"secret-key: $2a$10$/4cwS1j8JzAgdbYKEDbeM.x19a0UM5C612PtEvoBv.hqtGagcY.DG\\r\\nprivate: true\"\r"));
+      Serial.print(F("AT+HTTPPARA=\"USERDATA\",\"secret-key: $2b$10$qcJovI2nx0zBwaadLiTEjuHo31AmRonnxMPVqVNHUWphRN7wWbB/q\\r\\nprivate: true\"\r"));
       Serial.readString();
       Serial.print(F("AT+HTTPDATA="));
       Serial.print(String(s.length()) + ",2000\r");
@@ -315,7 +315,7 @@ String locInfo(byte save) {
     }
     else if (save == 2) {
       writeEeprom("Dt:" + data[2] + "\nTime:" + data[3] + "\nLongitude:\n" + data[0] + "\nLatitude:\n" + data[1]);
-      display.println(F("Info saved \nto Eeprom!:"));
+      display.println(F("Info saved \nto Storage!:"));
       display.display();
       delay(2000);
     }
@@ -324,7 +324,7 @@ String locInfo(byte save) {
       s += data[0];
       s += F("&lat=");
       s += data[1];
-      s += F("&units=metric&appid=0a3456488cb52d167293ee9ca1f00539"); // Please change the App id to your API key
+      s += F("&units=metric&appid=82991c5c20380ede6b5af7cdd316df29"); // Please change the App id to your API key
       return s;
     }
   }
@@ -338,7 +338,7 @@ void netInfo() {
     isItSleep = false;
   }
   display.clearDisplay();
-  display.println(F("Getting\nlink info"));
+  display.println(F("Getting\nNet info"));
   display.display();
   String data[2];
   String network;
@@ -416,7 +416,7 @@ void connectGPRS() {
   }
   else {
     display.clearDisplay();
-    display.println(F("Initializing \nSquirrelLink \n"));
+    display.println(F("Initializing \nNetwork \n"));
     display.display();
     Serial.print(F("AT+CSCLK=0\r"));
     while (!Serial.available());
@@ -580,12 +580,12 @@ void wakeUp() {
   digitalWrite(resetPin, HIGH);
   digitalWrite(pwrPin, HIGH);
   display.clearDisplay();
-  display.println(F("Waking up \nSquirrelLink"));
+  display.println(F("Waking up \nnetwork"));
   display.display();
   delay(4000);
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("SquirrelLink\n is \nnot connected or \nnot responding"));
+    display.println(F("Network\n is \nnot connected or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
