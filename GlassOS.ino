@@ -171,7 +171,35 @@ void loop() {
     }
     else if (menuPos == 10)
       pwrDown();
-    else if (menuPos == 10) {
+    }
+    else if (menuPos == 11) {
+      String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/Dictionary.txt"), true);
+      if (s == "ERROR" || s == "")  {
+        display.clearDisplay();
+        display.println(F("Bad request! \ntry again"));
+        display.display();
+        delay(2000);
+      }
+      else {
+        s = s.substring(s.indexOf('\r') + 2, s.lastIndexOf("OK"));
+        s = s.substring(s.indexOf('\r') + 2, s.length() - 1);
+        display.clearDisplay();
+        digitalWrite(lcdBL, LOW);
+        /*for (byte i = 0; i < s.length(); i++) {
+          //Serial.print(s.charAt(i));
+          display.print(s.charAt(i));
+          }*/
+        display.print(s);
+        display.display();
+        digitalWrite(lcdBL, HIGH);
+        delay(500);
+        digitalWrite(lcdBL, LOW);
+        while (!isButtonDown(btnEnt) && !isButtonDown(btnUp) && !isButtonDown(btnDwn));
+      }
+      showMenu();
+    }
+    }
+    else if (menuPos == 12) {
       resetSim800();
       showMenu();
     }
