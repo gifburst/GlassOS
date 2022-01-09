@@ -23,7 +23,7 @@ bool GPRSCon, isItSleep, exitBool;
 byte menuPos, menuScreen, markerPos, menuStartAt;
 const char* const menu[13] PROGMEM  = {"GlassOS", "Net Info", "Weather", "Location", "Save Location",
                                        "Last Saved" , "Upload Loc", "Auto Upload", "Connect", "Disconnect",
-                                       "Power Down", "Reset Sim"
+                                       "Calendar", "Power Down", "Reset Sim"
                                       };
 byte MENU_LENGTH =  sizeof(menu) / sizeof(menu[0]);
 
@@ -173,7 +173,7 @@ void loop() {
       pwrDown();
     }
     else if (menuPos == 11) {
-      String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/Dictionary.txt"), true);
+      String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/Calendar.txt"), true);
       if (s == "ERROR" || s == "")  {
         display.clearDisplay();
         display.println(F("Bad request! \ntry again"));
