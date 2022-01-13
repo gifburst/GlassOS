@@ -1,4 +1,5 @@
-CostanOS Merc
+   CostanOS
+   Mercury
       by:
    Squirrel
 Released:
