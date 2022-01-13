@@ -23,9 +23,9 @@ unsigned long startMillis, currentMillis;
 const unsigned long period PROGMEM = 30000; // The duration in milliseconds before the microcontroller goes to sleep
 bool GPRSCon, isItSleep, exitBool;
 byte menuPos, menuScreen, markerPos, menuStartAt;
-const char* const menu[14] PROGMEM  = {"File Request", "Network Info", "Weather Info", "Location Info", "Save Location",
+const char* const menu[14] PROGMEM  = {"CostanOS", "Network Info", "Weather", "Location", "Save Location",
                                        "Last Saved" , "Upload Loc", "Auto Upload", "Connect", "Disconnect",
-                                       "Light Switch", "Power Down", "Reset Sim800L", "Debug Mode"
+                                       "Calendar", "Power Down", "Reset Sim", "Debug Mode"
                                       };
 byte MENU_LENGTH =  sizeof(menu) / sizeof(menu[0]);
 
@@ -50,7 +50,7 @@ void setup() {
   delay(4000);  // You may increase this if the duration isn't enough
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("Sim800L is \nturned off or \nnot responding"));
+    display.println(F("Sim is \nturned off or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
@@ -84,7 +84,7 @@ void loop() {
   }
   if (isButtonDown(btnEnt) == true) {
     if (menuPos == 0) {
-      const String s = openURL(F("raw.githubusercontent.com/HA4ever37/Sim800l/master/Sim800.txt"), true); // Change the URL to your text file link
+      const String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/CostanOS1.txt"), true); // Change the URL to your text file link
       if (s == "ERROR" || s == "")  {
         display.clearDisplay();
         display.println(F("Bad request! \ntry again"));
@@ -178,7 +178,31 @@ void loop() {
     else if (menuPos == 10)
       toggle();
     else if (menuPos == 11)
-      pwrDown();
+      const String s = openURL(F("https://raw.githubusercontent.com/squirrelcom/GlassOS/master/Calendar.txt"), true); // Change the URL to your text file link
+      if (s == "ERROR" || s == "")  {
+        display.clearDisplay();
+        display.println(F("Bad request! \ntry again"));
+        display.display();
+        delay(2000);
+      }
+      else {
+        s = s.substring(s.indexOf(F("\r")) + 2, s.lastIndexOf(F("OK")));
+        s = s.substring(s.indexOf(F("\r")) + 2, s.length() - 1);
+        display.clearDisplay();
+        digitalWrite(lcdBL, LOW);
+        /*for (byte i = 0; i < s.length(); i++) {
+          //Serial.print(s.charAt(i));
+          display.print(s.charAt(i));
+          }*/
+        display.print(s);
+        display.display();
+        digitalWrite(lcdBL, HIGH);
+        delay(500);
+        digitalWrite(lcdBL, LOW);
+        while (!isButtonDown(btnEnt) && !isButtonDown(btnUp) && !isButtonDown(btnDwn));
+      }
+      showMenu();
+    }
     else if (menuPos == 12) {
       resetSim800();
       showMenu();
@@ -208,13 +232,13 @@ String openURL(String string, bool ssl) {
     connectGPRS();
   display.clearDisplay();
   Serial1.print(F("AT+HTTPINIT\r"));
-  display.println(F("HTTP \nIntialization\n"));
+  display.println(F("Network \nIntialization\n"));
   display.display();
   if (Serial1.readString().indexOf(F("OK")) == -1)
     return;
   Serial1.print(F("AT+HTTPPARA=\"CID\",1\r"));
   Serial1.readString();
-  display.print(F("Sending URL\nrequest"));
+  display.print(F("Requesting \ninformation"));
   display.display();
   Serial1.print(F("AT+HTTPPARA=\"URL\",\""));
   Serial1.print(string + "\"\r");
@@ -301,7 +325,7 @@ String locInfo(byte save) {
       Serial1.print(F("AT+HTTPPARA=\"CONTENT\",\"application/json\"\r"));
       Serial1.readString();
       // WARNING!!!  YOU MUST CHANGE the secret-key otherwise your location info will be sent to my JSON account!
-      Serial1.print(F("AT+HTTPPARA=\"USERDATA\",\"secret-key: $2a$10$/4cwS1j8JzAgdbYKEDbeM.x19a0UM5C612PtEvoBv.hqtGagcY.DG\\r\\nprivate: true\"\r"));
+      Serial1.print(F("AT+HTTPPARA=\"USERDATA\",\"secret-key: $2b$10$qcJovI2nx0zBwaadLiTEjuHo31AmRonnxMPVqVNHUWphRN7wWbB/q\\r\\nprivate: true\"\r"));
       Serial1.readString();
       Serial1.print(F("AT+HTTPDATA="));
       Serial1.print(String(s.length()) + ",2000\r");
@@ -336,7 +360,7 @@ String locInfo(byte save) {
       s += data[0];
       s += F("&lat=");
       s += data[1];
-      s += F("&units=metric&appid=0a3456488cb52d167293ee9ca1f00539"); // Please change the App id to your API key
+      s += F("&units=metric&appid=82991c5c20380ede6b5af7cdd316df29"); // Please change the App id to your API key
       return s;
     }
   }
@@ -428,7 +452,7 @@ void connectGPRS() {
   }
   else {
     display.clearDisplay();
-    display.println(F("Initializing \nSim800L\n"));
+    display.println(F("Initializing \nSim\n"));
     display.display();
     Serial1.print(F("AT+CSCLK=0\r"));
     while (!Serial1.available());
@@ -591,12 +615,12 @@ void wakeUp() {
   digitalWrite(resetPin, HIGH);
   digitalWrite(pwrPin, HIGH);
   display.clearDisplay();
-  display.println(F("Waking up \nSim800L"));
+  display.println(F("Waking up \nSim"));
   display.display();
   delay(4000);
   while (!checkSim800()) {
     display.clearDisplay();
-    display.println(F("Sim800L is \nturned off or \nnot responding"));
+    display.println(F("Sim is \nturned off or \nnot responding"));
     display.display();
     delay(2000);
     resetSim800();
