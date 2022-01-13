@@ -1,5 +1,5 @@
- GlassOS 1.00
+CostanOS Merc
       by:
-  SquirrelEn
+   Squirrel
 Released:
 6/1/2022
