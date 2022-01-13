@@ -1,6 +1,5 @@
    CostanOS
    Mercury
-      by:
-   Squirrel
+squirrelcom
 Released:
 6/1/2022
